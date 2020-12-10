@@ -26,7 +26,6 @@ public class EmployeesIndexServlet extends HttpServlet {
      */
     public EmployeesIndexServlet() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
     /**
