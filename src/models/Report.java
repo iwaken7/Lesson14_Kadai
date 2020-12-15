@@ -23,7 +23,7 @@ import javax.persistence.Table;
     ),
     @NamedQuery(
             name = "getReportsCount",
-            query = "SELECT r FROM Report AS r ORDER BY r.id DESC"
+            query = "SELECT COUNT(r) FROM Report AS r"
     ),
 })
 
