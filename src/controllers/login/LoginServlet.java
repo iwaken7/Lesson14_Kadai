@@ -27,12 +27,12 @@ public class LoginServlet extends HttpServlet {
      */
     public LoginServlet() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
     /**
      * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
      */
+    // ログイン画面を表示
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setAttribute("_token", request.getSession().getId());
         request.setAttribute("hasError", false);
@@ -53,7 +53,7 @@ public class LoginServlet extends HttpServlet {
         // 認証結果を格納する変数
         Boolean check_result = false;
 
-        String code =request.getParameter("code");
+        String code = request.getParameter("code");
         String plain_pass = request.getParameter("password");
 
         Employee e = null;
@@ -66,12 +66,12 @@ public class LoginServlet extends HttpServlet {
                     (String)this.getServletContext().getAttribute("pepper")
                     );
 
-            // 社員番号とパスワードが正しいかチェックをする
+            // 社員番号とパスワードが正しいかチェックする
             try {
                 e = em.createNamedQuery("checkLoginCodeAndPassword", Employee.class)
-                        .setParameter("code", code)
-                        .setParameter("pass", password)
-                        .getSingleResult();
+                      .setParameter("code", code)
+                      .setParameter("pass", password)
+                      .getSingleResult();
             } catch(NoResultException ex) {}
 
             em.close();
