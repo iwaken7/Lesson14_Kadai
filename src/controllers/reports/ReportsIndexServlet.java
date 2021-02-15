@@ -59,7 +59,7 @@ public class ReportsIndexServlet extends HttpServlet {
             request.getSession().removeAttribute("flush");
         }
 
-
+        // 日報一覧に遷移
         RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/reports/index.jsp");
         rd.forward(request, response);
     }

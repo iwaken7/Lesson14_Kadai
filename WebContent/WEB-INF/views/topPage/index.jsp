@@ -9,13 +9,15 @@
             </div>
         </c:if>
         <h2>日報管理システムへようこそ</h2>
-        <h3>【自分の日報　一覧】</h3>
+        <h3>【<c:out value="${sessionScope.login_employee.name}" />さんの日報一覧】</h3><br />
+        <h3>[管理状況]　<a href="<c:url value='/follows/index' />">フォロー数</a>【${follows_count}】<a href="<c:url value='/followers/index' />">フォロワー数</a>【${followers_count}】</h3>
         <table id="report_list">
             <tbody>
                 <tr>
                     <th class="report_name">氏名</th>
                     <th class="report_date">日付</th>
                     <th class="report_title">タイトル</th>
+                    <th class="report_like_count">いいね数</th>
                     <th class="report_action">操作</th>
                 </tr>
                 <c:forEach var="report" items="${reports}" varStatus="status">
@@ -23,6 +25,16 @@
                         <td class="report_name"><c:out value="${report.employee.name}" /></td>
                         <td class="report_date"><fmt:formatDate value='${report.report_date}' pattern='yyyy-MM-dd' /></td>
                         <td class="report_title">${report.title}</td>
+                        <td class="report_like_count">
+                            <c:choose>
+                                <c:when test="${report.like_count == 0}">
+                                    ${report.like_count}
+                                </c:when>
+                                <c:otherwise>
+                                    <a href="<c:url value='/likes/index?id=${report.id}' />">${report.like_count}</a>
+                                </c:otherwise>
+                            </c:choose>
+                        </td>
                         <td class="report_action"><a href="<c:url value='/reports/show?id=${report.id}' />">詳細を見る</a></td>
                     </tr>
                 </c:forEach>
@@ -42,6 +54,6 @@
                 </c:choose>
             </c:forEach>
         </div>
-        <p><a href="<c:url value='/reports/new' />">新規日報の登録</a></p>
+       <p><a href="<c:url value='/reports/new' />">新規日報の登録</a></p>
     </c:param>
 </c:import>

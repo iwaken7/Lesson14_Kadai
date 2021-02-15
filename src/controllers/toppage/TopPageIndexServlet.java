@@ -35,6 +35,7 @@ public class TopPageIndexServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         EntityManager em = DBUtil.createEntityManager();
 
+        // 従業員クラスからログインした従業員IDを取得
         Employee login_employee = (Employee)request.getSession().getAttribute("login_employee");
 
         int page;
@@ -43,20 +44,43 @@ public class TopPageIndexServlet extends HttpServlet {
         } catch(Exception e) {
             page = 1;
         }
-        List<Report> reports = em.createNamedQuery("getMyAllReports", Report.class)
-                                  .setParameter("employee", login_employee)
-                                  .setFirstResult(15 * (page - 1))
-                                  .setMaxResults(15)
-                                  .getResultList();
 
+        // Reportテーブル
+        // getMyAllReports("SELECT r FROM Report AS r WHERE r.employee = :employee ORDER BY r.id DESC")
+        // ログインした従業員IDと日報の従業員IDが一致した日報を降順で取得
+        List<Report> reports = em.createNamedQuery("getMyAllReports", Report.class)
+                                   .setParameter("employee", login_employee)
+                                   .setFirstResult(15 * (page - 1))
+                                   .setMaxResults(15)
+                                   .getResultList();
+
+        // Reportテーブル
+        // long型を使って上と同じ条件で取得した数を表示する処理
         long reports_count = (long)em.createNamedQuery("getMyReportsCount", Long.class)
-                                     .setParameter("employee", login_employee)
-                                     .getSingleResult();
+                                         .setParameter("employee", login_employee)
+                                         .getSingleResult();
+
+        // Followテーブル
+        // getMyFollowCount("SELECT COUNT(f) FROM Follow AS f WHERE f.follow = :employee")
+        // ログインした従業員IDとフォローしたIDが一致したものを件数で取得
+        long follows_count = (long)em.createNamedQuery("getMyFollowCount", Long.class)
+                                         .setParameter("employee", login_employee)
+                                         .getSingleResult();
+
+        // Followテーブル
+        // getMyFollowerCount("SELECT COUNT(f) FROM Follow AS f WHERE f.follower = :employee")
+        // ログインした従業員IDとフォローされたIDが一致したものを件数で取得
+        long followers_count = (long)em.createNamedQuery("getMyFollowerCount", Long.class)
+                                           .setParameter("employee", login_employee)
+                                           .getSingleResult();
 
         em.close();
 
+        // ("/WEB-INF/views/topPage/index.jsp")に遷移した時値を渡すためにリクエストスコープにセットする
         request.setAttribute("reports", reports);
         request.setAttribute("reports_count", reports_count);
+        request.setAttribute("follows_count", follows_count);
+        request.setAttribute("followers_count", followers_count);
         request.setAttribute("page", page);
 
         if(request.getSession().getAttribute("flush") != null) {
@@ -64,6 +88,7 @@ public class TopPageIndexServlet extends HttpServlet {
             request.getSession().removeAttribute("flush");
         }
 
+        // 〇〇さんの日報一覧に遷移
         RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/topPage/index.jsp");
         rd.forward(request, response);
     }

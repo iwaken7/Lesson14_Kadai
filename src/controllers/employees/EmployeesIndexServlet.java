@@ -38,16 +38,21 @@ public class EmployeesIndexServlet extends HttpServlet {
         try{
             page = Integer.parseInt(request.getParameter("page"));
         } catch(NumberFormatException e) { }
+
+        // getAllEmployees("SELECT e FROM Employee AS e ORDER BY e.id DESC")
+        //全ての従業員情報を取得
         List<Employee> employees = em.createNamedQuery("getAllEmployees", Employee.class)
                                      .setFirstResult(15 * (page - 1))
                                      .setMaxResults(15)
                                      .getResultList();
 
+        // long型を使って上と同じ条件で取得した数を表示する処理
         long employees_count = (long)em.createNamedQuery("getEmployeesCount", Long.class)
                                        .getSingleResult();
 
         em.close();
 
+        // ("/WEB-INF/views/employees/index.jsp")に遷移した時値を渡すためにリクエストスコープにセットする
         request.setAttribute("employees", employees);
         request.setAttribute("employees_count", employees_count);
         request.setAttribute("page", page);
@@ -56,6 +61,7 @@ public class EmployeesIndexServlet extends HttpServlet {
             request.getSession().removeAttribute("flush");
         }
 
+        // 従業員一覧に遷移
         RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/employees/index.jsp");
         rd.forward(request, response);
     }

@@ -14,48 +14,48 @@ import javax.persistence.Table;
 @Table(name = "employees")
 @NamedQueries({
     @NamedQuery(
-        name = "getAllEmployees",
-        query = "SELECT e FROM Employee AS e ORDER BY e.id DESC"
+        name = "getAllEmployees", //全ての従業員情報を取得
+        query = "SELECT e FROM Employee AS e ORDER BY e.id DESC" //降順で表示のためDESC
     ),
     @NamedQuery(
-        name = "getEmployeesCount",
+        name = "getEmployeesCount", //全ての従業員情報の件数を取得
         query = "SELECT COUNT(e) FROM Employee AS e"
     ),
     @NamedQuery(
-        name = "checkRegisteredCode",
+        name = "checkRegisteredCode", //指定された社員番号がすでにデータベースに存在しているかを調べる
         query = "SELECT COUNT(e) FROM Employee AS e WHERE e.code = :code"
     ),
     @NamedQuery(
-        name = "checkLoginCodeAndPassword",
+        name = "checkLoginCodeAndPassword", //従業員がログインするときに社員番号とパスワードが正しいかチェックするためのもの
         query = "SELECT e FROM Employee AS e WHERE e.delete_flag = 0 AND e.code = :code AND e.password = :pass"
     )
 })
 @Entity
 public class Employee {
     @Id
-    @Column(name = "id")
+    @Column(name = "id") //リソース内での連番
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "code", nullable = false, unique = true)
+    @Column(name = "code", nullable = false, unique = true) //社員番号
     private String code;
 
-    @Column(name = "name", nullable = false)
+    @Column(name = "name", nullable = false) //社員名
     private String name;
 
-    @Column(name = "password", length = 64, nullable = false)
+    @Column(name = "password", length = 64, nullable = false) //システムへのログインパスワード
     private String password;
 
-    @Column(name = "admin_flag", nullable = false)
+    @Column(name = "admin_flag", nullable = false) //管理者権限があるかどうか
     private Integer admin_flag;
 
-    @Column(name = "created_at", nullable = false)
+    @Column(name = "created_at", nullable = false) //登録日時
     private Timestamp created_at;
 
-    @Column(name = "updated_at", nullable = false)
+    @Column(name = "updated_at", nullable = false) //更新日時
     private Timestamp updated_at;
 
-    @Column(name = "delete_flag", nullable = false)
+    @Column(name = "delete_flag", nullable = false) //削除された従業員かどうか
     private Integer delete_flag;
 
     public Integer getId() {

@@ -42,6 +42,7 @@ public class EmployeesEditServlet extends HttpServlet {
         request.setAttribute("_token", request.getSession().getId());
         request.getSession().setAttribute("employee_id", e.getId());
 
+     // 従業員編集画面に遷移
         RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/employees/edit.jsp");
         rd.forward(request, response);
     }

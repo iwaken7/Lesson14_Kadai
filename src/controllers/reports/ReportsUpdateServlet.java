@@ -63,8 +63,10 @@ public class ReportsUpdateServlet extends HttpServlet {
                 em.close();
                 request.getSession().setAttribute("flush", "更新が完了しました。");
 
+                // 古い日報IDを削除する
                 request.getSession().removeAttribute("report_id");
 
+                // 日報一覧に遷移
                 response.sendRedirect(request.getContextPath() + "/reports/index");
             }
         }

@@ -18,19 +18,19 @@ import javax.persistence.Table;
 @Table(name = "reports")
 @NamedQueries({
     @NamedQuery(
-            name = "getAllReports",
+            name = "getAllReports", //全ての日報情報を降順で取得
             query = "SELECT r FROM Report AS r ORDER BY r.id DESC"
     ),
     @NamedQuery(
-            name = "getReportsCount",
+            name = "getReportsCount", //全ての日報情報の件数を取得
             query = "SELECT COUNT(r) FROM Report AS r"
     ),
     @NamedQuery(
-            name = "getMyAllReports",
+            name = "getMyAllReports", //ログインした従業員IDと日報の従業員IDが一致した日報を降順で取得
             query = "SELECT r FROM Report AS r WHERE r.employee = :employee ORDER BY r.id DESC"
     ),
     @NamedQuery(
-            name = "getMyReportsCount",
+            name = "getMyReportsCount", //ログインした従業員IDと日報の従業員IDが一致した日報を件数で取得
             query = "SELECT COUNT(r) FROM Report AS r WHERE r.employee = :employee"
     )
 })
@@ -38,29 +38,32 @@ import javax.persistence.Table;
 @Entity
 public class Report {
     @Id
-    @Column(name = "id")
+    @Column(name = "id") //リソース内での連番
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "employee_id", nullable = false)
+    @JoinColumn(name = "employee_id", nullable = false) //日報を登録した社員の社員番号
     private Employee employee;
 
-    @Column(name = "report_date", nullable = false)
+    @Column(name = "report_date", nullable = false) //いつの日報かを示す日時
     private Date report_date;
 
-    @Column(name = "title", length = 255, nullable = false)
+    @Column(name = "title", length = 255, nullable = false) //日報のタイトル
     private String title;
 
     @Lob
-    @Column(name = "content", nullable = false)
+    @Column(name = "content", nullable = false) //日報の内容
     private String content;
 
-    @Column(name = "created_at", nullable = false)
+    @Column(name = "created_at", nullable = false) //日報の登録日時
     private Timestamp created_at;
 
-    @Column(name = "updated_at", nullable = false)
+    @Column(name = "updated_at", nullable = false) //日報の更新日時
     private Timestamp updated_at;
+
+    @Column(name = "like_count", nullable = false) //日報のいいねをカウントする機能
+    private Integer like_count;
 
     public Integer getId() {
         return id;
@@ -118,5 +121,12 @@ public class Report {
         this.updated_at = updated_at;
     }
 
+    public Integer getLike_count() {
+        return like_count;
+    }
+
+    public void setLike_count(Integer like_count) {
+        this.like_count = like_count;
+    }
 
 }

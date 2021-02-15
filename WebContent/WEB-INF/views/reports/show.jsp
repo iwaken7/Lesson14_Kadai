@@ -35,18 +35,37 @@
                                 <fmt:formatDate value="${report.updated_at}" pattern="yyyy-MM-dd HH:mm:ss" />
                             </td>
                         </tr>
+                        <tr>
+                            <th>いいね数</th>
+                            <td class="report_like_count">
+                                <c:choose>
+                                    <c:when test="${report.like_count == 0}">
+                                        ${report.like_count}
+                                    </c:when>
+                                    <c:otherwise>
+                                        <a href="<c:url value='/likes/index?id=${report.id}' />">${report.like_count}</a>
+                                    </c:otherwise>
+                                </c:choose>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
 
-                <c:if test="${sessionScope.login_employee.id == report.employee.id}">
-                    <p><a href="<c:url value="/reports/edit?id=${report.id}" />">この日報を編集する</a></p>
-                </c:if>
-            </c:when>
+                    <c:if test="${sessionScope.login_employee.id == report.employee.id}">
+                        <p><a href="<c:url value="/reports/edit?id=${report.id}" />">この日報を編集する</a></p>
+                    </c:if>
+                    <c:if test="${sessionScope.login_employee.id != report.employee.id && likes_record == 0}">
+                        <p><a href="<c:url value="/reports/like?id=${report.id}" />">この日報にいいねする</a></p>
+                    </c:if>
+                    <c:if test="${sessionScope.login_employee.id != report.employee.id && follows_record == 0}">
+                        <p><a href="<c:url value="/follows/create?id=${report.employee.id}" />">この日報の作成者をフォローする</a></p>
+                    </c:if>
+
+                </c:when>
             <c:otherwise>
                 <h2>お探しのデータは見つかりませんでした。</h2>
             </c:otherwise>
         </c:choose>
-
-        <p><a href="<c:url value="/reports/index" />">一覧に戻る</a></p>
+        <p><a href="<c:url value="/reports/index" />">日報一覧に戻る</a></p>
     </c:param>
 </c:import>

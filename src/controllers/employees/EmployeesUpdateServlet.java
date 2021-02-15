@@ -81,14 +81,17 @@ public class EmployeesUpdateServlet extends HttpServlet {
 
                 RequestDispatcher rd = request.getRequestDispatcher("WEB-INF/views/employees/edit.jsp");
                 rd.forward(request, response);
+            // データベースに新しい情報を更新
             } else {
                 em.getTransaction().begin();
                 em.getTransaction().commit();
                 em.close();
                 request.getSession().setAttribute("flush", "更新が完了しました。");
 
+                // 古い従業員情報を削除
                 request.getSession().removeAttribute("employee_id");
 
+                // 従業員一覧に遷移
                 response.sendRedirect(request.getContextPath() + "/employees/index");
             }
         }
